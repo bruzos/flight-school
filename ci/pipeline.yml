@@ -1,13 +1,41 @@
 resources:
-- name: flight-school
+- name: code-microserviceA
   type: git
   source:
     uri: https://github.com/bruzos/flight-school
     branch: master
+# - name: local-docker-repo
+#   type: docker-image
+#   source:
+#     repository: 127.0.0.1:5000/ubuntu
+#     tag: "latest"
+#     insecure_registries: [ "127.0.0.1:5000" ]
 
 jobs:
-- name: test-app
+# - name: check-os-version
+#   serial: true
+#   build_logs_to_retain: 100
+#   plan:
+#   - get: local-docker-repo
+#     trigger: true
+#   - task: check-image-os-version
+#     config:
+#       platform: linux
+#       image_resource:
+#         type: docker-image
+#         source:
+#           repository: 127.0.0.1:5000/ubuntu
+#           tag: "latest"
+#           insecure_registries: [ "127.0.0.1:5000" ]
+#       inputs:
+#         - name: concourse-pipeline-samples
+#       run:
+#         path: cat
+#         args:
+#         - "/etc/lsb-release"
+- name: build-test-app
+  serial: true
   plan:
-  - get: flight-school
+  - get: code-microserviceA
   - task: tests
-    file: flight-school/build.yml
+    file: code-microserviceA/build.yml

@@ -2,7 +2,7 @@
 
 set -e -x
 
-pushd flight-school
+pushd code-microserviceA
   bundle install
   bundle exec rspec
 popd
