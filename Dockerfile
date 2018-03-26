@@ -3,6 +3,7 @@ MAINTAINER Ricardo Bruzos, ricardo.bruzos.contractor@bbva.com
 
 RUN apt-get update -qq && apt-get install -y build-essential
 
+ENV PATH /usr/local/bin:$PATH
 ENV APP_HOME /app
 RUN mkdir $APP_HOME
 WORKDIR $APP_HOME
