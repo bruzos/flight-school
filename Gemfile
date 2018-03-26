@@ -2,9 +2,12 @@ source "https://rubygems.org"
 
 gem "sinatra"
 gem "sinatra-contrib"
-gem 'capistrano'
-gem "capistrano-bundler"
-gem "capistrano-passenger"
+
+group :development do
+  gem "capistrano", "~> 3.10", require: false
+  #gem "capistrano-bundler"
+  #gem "capistrano-passenger"
+end
 
 group :test do
   gem "rspec"
