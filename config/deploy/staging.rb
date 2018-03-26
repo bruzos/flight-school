@@ -6,7 +6,7 @@
 # server "example.com", user: "deploy", roles: %w{app db web}, my_property: :my_value
 # server "example.com", user: "deploy", roles: %w{app web}, other_property: :other_value
 # server "db.example.com", user: "deploy", roles: %w{db}
-server "52.48.1.168", :user => "deployer", :roles => %{web app}
+server "52.48.1.168", :user => "deploy", :roles => %w{web app}
 
 # role-based syntax
 # ==================
@@ -31,6 +31,8 @@ server "52.48.1.168", :user => "deployer", :roles => %{web app}
 # Feel free to add new variables to customise your setup.
 
 set :branch, "master"
+
+set :default_env, { path: "/opt/ruby/bin:/usr/local/bundle/bin:$PATH" }
 
 
 # Custom SSH Options
