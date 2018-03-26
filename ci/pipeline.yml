@@ -1,24 +1,41 @@
+
+resource_types:
+- name: capistrano
+  type: docker-image
+  source:
+    repository: shyxormz/capistrano-resource
+    tag: latest
+
 resources:
 - name: code-microserviceA
   type: git
   source:
     uri: https://github.com/bruzos/flight-school
     branch: master
-# - name: local-docker-repo
-#   type: docker-image
-#   source:
-#     repository: 127.0.0.1:5000/ubuntu
-#     tag: "latest"
-#     insecure_registries: [ "127.0.0.1:5000" ]
+- name: microserviceA-docker-image
+  type: docker-image
+  source:
+    repository: 10.23.48.45:5000/microservice_a
+    tag: "latest"
+    insecure_registries: [ "10.23.48.45:5000" ]
+- name: stagging-deployment
+  type: capistrano
+  source:
+    stage: stagging
+    private_key: |
+      -----BEGIN RSA PRIVATE KEY-----
+      MIISKAIBAAKCBAEAyx0Gxg1Ph2MqLb5ogJHq0jGSDqgGqiLOyK771l5PhbAUYDXc
+      <Lots more text>
+      RBBTrpwGkMUvgGExiqEGNPzut9v9vTIczSifCzgD7vLra9NNv67J2Kt7zOM=
+      -----END RSA PRIVATE KEY-----
 
 jobs:
 # - name: check-os-version
 #   serial: true
-#   build_logs_to_retain: 100
 #   plan:
-#   - get: local-docker-repo
+#   - get: ubuntu-docker-image
 #     trigger: true
-#   - task: check-image-os-version
+#   - task: print-image-os-version
 #     config:
 #       platform: linux
 #       image_resource:
@@ -28,14 +45,29 @@ jobs:
 #           tag: "latest"
 #           insecure_registries: [ "127.0.0.1:5000" ]
 #       inputs:
-#         - name: concourse-pipeline-samples
+#         - name: code-microserviceA
 #       run:
 #         path: cat
 #         args:
 #         - "/etc/lsb-release"
-- name: build-test-app
+- name: unit-tests
   serial: true
   plan:
   - get: code-microserviceA
-  - task: tests
+    trigger: true
+  - task: execute-tests
     file: code-microserviceA/build.yml
+  - put: microserviceA-docker-image
+    name: update-microserviceA-docker-image
+    params: {build: code-microserviceA}
+    get_params: {rootfs: true}
+- name: stagging-deployment
+  serial: true
+  plan:
+  - get: code-microserviceA
+    trigger: true
+    passed:
+      - unit-tests
+  - put: stagging-deployment
+    params:
+      path: code-microserviceA
