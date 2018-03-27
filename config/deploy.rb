@@ -43,3 +43,4 @@ set :deploy_to, "/home/deploy/test-application"
 #set :passenger_environment_variables, { :path => '/usr/bin:$PATH' }
  #set :passenger_restart_with_touch, true
  set :ssh_options, { :forward_agent => true }
+ append :linked_dirs, "tmp"
