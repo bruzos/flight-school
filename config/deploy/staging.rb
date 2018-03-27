@@ -32,8 +32,6 @@ server "52.48.1.168", :user => "deploy", :roles => %w{web app}
 
 set :branch, "master"
 
-set :default_env, { path: "/opt/ruby/bin:/usr/local/bundle/bin:$PATH" }
-
 
 # Custom SSH Options
 # ==================
