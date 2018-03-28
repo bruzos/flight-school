@@ -3,8 +3,9 @@ resource_types:
 - name: capistrano
   type: docker-image
   source:
-    repository: shyxormz/capistrano-resource
-    tag: latest
+    repository: 10.23.48.45:5000/capistrano-resource
+    tag: "latest"
+    insecure_registries: [ "10.23.48.45:5000" ]
 
 resources:
 - name: code-microserviceA
@@ -21,35 +22,10 @@ resources:
 - name: stagging-deployment
   type: capistrano
   source:
-    stage: stagging
-    private_key: |
-      -----BEGIN RSA PRIVATE KEY-----
-      MIISKAIBAAKCBAEAyx0Gxg1Ph2MqLb5ogJHq0jGSDqgGqiLOyK771l5PhbAUYDXc
-      <Lots more text>
-      RBBTrpwGkMUvgGExiqEGNPzut9v9vTIczSifCzgD7vLra9NNv67J2Kt7zOM=
-      -----END RSA PRIVATE KEY-----
+    stage: staging
+    private_key: {{aws_web_key}}
 
 jobs:
-# - name: check-os-version
-#   serial: true
-#   plan:
-#   - get: ubuntu-docker-image
-#     trigger: true
-#   - task: print-image-os-version
-#     config:
-#       platform: linux
-#       image_resource:
-#         type: docker-image
-#         source:
-#           repository: 127.0.0.1:5000/ubuntu
-#           tag: "latest"
-#           insecure_registries: [ "127.0.0.1:5000" ]
-#       inputs:
-#         - name: code-microserviceA
-#       run:
-#         path: cat
-#         args:
-#         - "/etc/lsb-release"
 - name: unit-tests
   serial: true
   plan:

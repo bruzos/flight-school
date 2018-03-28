@@ -17,16 +17,16 @@ set :deploy_to, "/home/deploy/test-application"
 
 # You can configure the Airbrussh format using :format_options.
 # These are the defaults.
-# set :format_options, command_output: true, log_file: "log/capistrano.log", color: :auto, truncate: :auto
+set :format_options, command_output: true, log_file: "log/capistrano.log", color: :auto, truncate: :auto
 
 # Default value for :pty is false
 # set :pty, true
 
 # Default value for :linked_files is []
-# append :linked_files, "config/database.yml", "config/secrets.yml"
+#append :linked_files, "config/database.yml", "config/secrets.yml"
 
 # Default value for linked_dirs is []
-# append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "public/system"
+append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "public/system"
 
 # Default value for default_env is {}
 # set :default_env, { path: "/opt/ruby/bin:$PATH" }
@@ -41,6 +41,5 @@ set :deploy_to, "/home/deploy/test-application"
  #set :ssh_options, verify_host_key: :secure
  #set :ssh_options, { :forward_agent => true, :port => 4321, verify_host_key: :secure }
 #set :passenger_environment_variables, { :path => '/usr/bin:$PATH' }
- #set :passenger_restart_with_touch, true
+ set :passenger_restart_with_touch, true
  set :ssh_options, { :forward_agent => true }
- append :linked_dirs, "tmp"
