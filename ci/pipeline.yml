@@ -16,7 +16,7 @@ resources:
 - name: microserviceA-docker-image
   type: docker-image
   source:
-    repository: 10.23.48.45:5000/microserviceA
+    repository: 10.23.48.45:5000/microservice-a
     tag: "latest"
     insecure_registries: [ "10.23.48.45:5000" ]
 - name: stagging-deployment
