@@ -16,7 +16,7 @@ resources:
 - name: microserviceA-docker-image
   type: docker-image
   source:
-    repository: 10.23.48.45:5000/microservice_a
+    repository: 10.23.48.45:5000/microserviceA
     tag: "latest"
     insecure_registries: [ "10.23.48.45:5000" ]
 - name: stagging-deployment
@@ -33,6 +33,12 @@ jobs:
     trigger: true
   - task: execute-tests
     file: code-microserviceA/build.yml
+- name: update-microserviceA-docker-image
+  plan:
+  - get: code-microserviceA
+    trigger: true
+    passed:
+      - unit-tests
   - put: microserviceA-docker-image
     name: update-microserviceA-docker-image
     params: {build: code-microserviceA}
