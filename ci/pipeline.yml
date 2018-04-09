@@ -6,6 +6,11 @@ resource_types:
     repository: 10.23.48.45:5000/capistrano-resource
     tag: "latest"
     insecure_registries: [ "10.23.48.45:5000" ]
+- name: kubernetes
+  type: docker-image
+  source:
+    repository: zlabjp/kubernetes-resource
+    tag: "1.9"
 
 resources:
 - name: code-microserviceA
@@ -24,6 +29,15 @@ resources:
   source:
     stage: staging
     private_key: {{aws_web_key}}
+- name: kubernetes-production
+  type: kubernetes
+  source:
+    server: https://10.23.48.45:8443
+    token: {{kubernetes-production-token}}
+    namespace: dev
+    insecure_skip_tls_verify: true 
+    
+    
 
 jobs:
 - name: unit-tests
@@ -43,6 +57,18 @@ jobs:
     name: update-microserviceA-docker-image
     params: {build: code-microserviceA}
     get_params: {rootfs: true}
+- name: kubernetes-deploy-production
+  plan:
+  - get: code-microserviceA
+    trigger: true
+    passed:
+      - update-microserviceA-docker-image
+  - put: kubernetes-production
+    params:
+      #kubectl: run microservice-a --image=10.23.48.45:5000/microservice-a --namespace=dev
+      #kubectl: auth can-i list pods --namespace dev
+      kubectl: apply -f code-microserviceA/ci/k8s/deployment_Ma.yml
+      wait_until_ready_selector: app=microservice-a
 - name: stagging-deployment
   serial: true
   plan:
